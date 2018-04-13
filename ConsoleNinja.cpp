@@ -18,7 +18,14 @@ public:
 	int y;
 };
 
+class Enemy
+{
+public:
+	int x;
+	int y;
+	string character;
 
+};
 
 int RNG(int);
 void GenerateMap();
@@ -33,24 +40,34 @@ void DrawScore();
 void HideScore();
 void Slash();
 
+void DrawEnemy();
+void HideEnemy();
+void MoveEnemies();
+
 string* map = new string[23];
 Direction currentDirection;
 
 Ninja ninja;
+Enemy enemy;
 
 int main()
 {
-	
+	enemy.character = "a";
+	enemy.x = 50;
+	enemy.y = 14;
+
 	ninja.x = 1;
 	ninja.y = 14;
 	GenerateMap();
 	currentDirection = STILL;
 	DrawNinja(ninja.x, ninja.y);
+	DrawEnemy();
+	//HideEnemy();
 	Render();
 	while(true)
 	{
-		GetUserInput();	
-		Render();
+		GetUserInput();
+		MoveEnemies();	
 	}
 	
 
@@ -112,7 +129,17 @@ void GetUserInput()
 		}
 	}
 }
+void MoveEnemies()
+{
+	if(enemy.x > 0)
+	{
+		HideEnemy();
+		enemy.x = enemy.x-1;
+		DrawEnemy();
+		Render();		
+	}
 
+}
 
 void Slash()
 {
@@ -179,6 +206,19 @@ void DrawScore()
 void HideScore()
 {
 	map[1].replace(0, 78, "#                                                                            #");	
+}
+
+void DrawEnemy()
+{
+	int x = enemy.x;
+	int y = enemy.y;
+	map[y].replace(x,1,enemy.character);
+}
+void HideEnemy()
+{
+	int x = enemy.x;
+	int y = enemy.y;
+	map[y].replace(x,1," ");
 }
 
 void GenerateMap()
