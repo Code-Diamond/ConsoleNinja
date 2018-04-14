@@ -3,6 +3,7 @@
 #include <cstring>
 #include <conio.h>
 #include <windows.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -145,6 +146,7 @@ class Ninja
 			{
 				if(x+21 >= enemies[i]->x && x+9 <= enemies[i]->x && y+3 == enemies[i]->y)
 				{
+					system("Color 0A");
 					enemies[i]->x = 77;
 					enemies[i]->character = "#";
 					enemies[i]->slain = true;
@@ -156,12 +158,13 @@ class Ninja
 			map.Render(1);
 			DrawNinja(map);
 			map.Render(1);
+			system("Color 07");
 		}
 
 		void DrawNinja(Map map)
 		{
 			//Height = 8
-			map.map[y].replace( x,7, "    OOO");
+			map.map[y].replace( x,7,  "    OOO");
 			map.map[y+1].replace(x,6, "   OOO");
 			map.map[y+2].replace(x,7, "  o | o");
 			map.map[y+3].replace(x,9, "{} |/| {}");
@@ -183,7 +186,7 @@ class Ninja
 		}
 		void DrawNinjaSlash(Map map)
 		{
-			map.map[y].replace( x,7, "    OOO");
+			map.map[y].replace( x,7,  "    OOO");
 			map.map[y+1].replace(x,6, "   OOO");
 			map.map[y+2].replace(x,7, "   O| >");
 			map.map[y+3].replace(x,9, "   |/| {>");
@@ -261,6 +264,12 @@ Map map;
 Ninja ninja;
 Enemy *enemies[100];
 int numberOfEnemies = 100;
+
+char numbers[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+char lowerCase[] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+char upperCase[] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+char specialChar[] = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+' };
+char evenMoreSpecial[] = { (char)156, (char)182, (char)240, (char)248, (char)142, (char)232, (char)240, (char)231, (char)253, (char)254, (char)255, (char)201, (char)202, (char)203, (char)204 };
 
 int main()
 {
