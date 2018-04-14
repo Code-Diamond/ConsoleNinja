@@ -76,7 +76,7 @@ class Enemy
 
 		Enemy()
 		{
-			x = RNG(20)+50;
+			x = RNG(27)+50;
 			y = RNG(14)+4;	
 			character = "a";
 		}
@@ -88,7 +88,7 @@ class Enemy
 		}
 		void MoveEnemy(Map map)
 		{
-			if(x > 1)
+			if(x > 1 && x != 77)
 			{
 				HideEnemy(map);
 				x--;
@@ -127,7 +127,7 @@ class Ninja
 			{
 				if(x+21 >= enemies[i]->x && x+9 <= enemies[i]->x && y+3 == enemies[i]->y)
 				{
-					enemies[i]->x = 0;
+					enemies[i]->x = 77;
 					enemies[i]->character = "#";
 					enemiesSlain++;
 				}
@@ -258,20 +258,18 @@ int main()
 
 		ninja.GetUserInput(map, enemies);
 		ninja.DrawNinja(map);
-		for(int i = 0; i < numberOfEnemies; i++)
-		{
-			enemies[i] -> DrawEnemy(map);
-		}
+
 		for(int i = 0; i < numberOfEnemies; i++)
 		{
 			enemies[i] -> MoveEnemy(map);
 		}
-		map.Render(100);
+
+		map.Render(25);
 		
 		bool checkIfEnd[numberOfEnemies];
 		for(int i = 0; i < numberOfEnemies; i++)
 		{
-			if(enemies[i]-> x == 0 || enemies[i]-> x == 1)
+			if(enemies[i]-> x == 77 || enemies[i]-> x == 1)
 			{
 				checkIfEnd[i] = true;	
 			}
@@ -294,8 +292,8 @@ int main()
 
 		if(allTrue)
 		{
-			map.Render(100);
-			cout << "\n\nLevel 1 complete\nEnemies slain: " << ninja.enemiesSlain << "\nScore: " << ninja.enemiesSlain * 765;
+			map.Render(25);
+			cout << "\n\nLevel 1 complete\nEnemies slain: " << ninja.enemiesSlain << "\nScore: " << (ninja.enemiesSlain * 765)-(ninja.enemiesSlain * 16);
 			exit(0);
 		}
 
@@ -317,7 +315,8 @@ void Intro()
 	system("CLS");
 	cout << "\n\n\n\n\n                            "
 		 << "Welcome to Console Ninja.\n\n              "
-		 << "Hack at the enemy characters until there are none left.\n\n                    "
+		 << "Hack at the enemy characters until there are none left.\n\n                 "
+		 << "The level ends when each row that spawned an enemy\n              has an enemy that reaches the end of the row (or was slain).\n\n                    "
 		 << "Use the W,A,S,D keys to move your ninja. \n                      "
 		 << "Press SPACEBAR to slash at the enemy.\n\n                      "
 		 << "At any point press type c to exit.\n\n                     "
