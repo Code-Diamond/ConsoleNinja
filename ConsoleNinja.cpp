@@ -112,10 +112,12 @@ class Ninja
 	public:
 		int x;
 		int y;
+		int enemiesSlain;
 		Ninja()
 		{
 			x = 1;
 			y = 14;
+			enemiesSlain = 0;
 		}
 
 		void Slash(Map map, Enemy *enemies[])
@@ -127,6 +129,7 @@ class Ninja
 				{
 					enemies[i]->x = 0;
 					enemies[i]->character = "#";
+					enemiesSlain++;
 				}
 			}
 			map.Render(25);
@@ -292,7 +295,7 @@ int main()
 		if(allTrue)
 		{
 			map.Render(100);
-			cout << "\n\nlevel 1 complete";
+			cout << "\n\nLevel 1 complete\nEnemies slain: " << ninja.enemiesSlain << "\nScore: " << ninja.enemiesSlain * 765;
 			exit(0);
 		}
 
@@ -305,6 +308,7 @@ int main()
 int RNG(int max)
 {
 	int randomNumber = rand() % max;
+
 	return randomNumber;
 }
 
