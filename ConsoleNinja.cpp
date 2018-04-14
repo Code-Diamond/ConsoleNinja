@@ -13,6 +13,7 @@ class Map
 {
 	public:
 		string* map = new string[23];
+		int tick = 0;
 		//Constructor
 		Map()
 		{
@@ -52,6 +53,7 @@ class Map
 				cout << map[i] << endl;
 			}
 			Sleep(100);	
+			tick++;
 		}
 		void Render(int ms)
 		{
@@ -62,6 +64,7 @@ class Map
 				cout << map[i] << endl;
 			}
 			Sleep(ms);	
+			tick++;
 		}		
 
 };
@@ -88,7 +91,7 @@ class Enemy
 		}
 		void MoveEnemy(Map map)
 		{
-			if(x > 1 && x != 77)
+			if(x > 1 && x != 77 && map.tick % 5 == 0)
 			{
 				HideEnemy(map);
 				x--;
@@ -237,7 +240,7 @@ class Ninja
 
 
 
-
+int tick = 0;
 Map map;
 Ninja ninja;
 Enemy *enemies[10];
