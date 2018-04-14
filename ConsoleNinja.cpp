@@ -76,12 +76,22 @@ class Enemy
 		int x;
 		int y;
 		string character;
-
-		Enemy()
+		bool slain = false;
+		Enemy(Map map)
 		{
-			x = RNG(27)+50;
-			y = RNG(14)+4;	
-			character = "a";
+			bool validatePosition = true;
+			while(validatePosition)
+			{
+				x = RNG(27)+50;
+				y = RNG(14)+4;	
+				character = "a";
+				if((char)map.map[y].at(x) != 'a')
+				{
+					validatePosition = false;
+				}
+				DrawEnemy(map);				
+			}
+
 		}
 		
 
@@ -91,17 +101,22 @@ class Enemy
 		}
 		void MoveEnemy(Map map)
 		{
-			if(x > 1 && x != 77 && map.tick % 5 == 0)
+			if(x > 1 && x != 77 && map.tick % 10 == 0)
 			{
 				HideEnemy(map);
 				x--;
 				DrawEnemy(map);
-			}			
+			}
+			if(x == 1 || x == 77)
+			{
+				slain = true;
+			}		
 		}
 		void HideEnemy(Map map)
 		{
 			map.map[y].replace(x,1," ");
 		}
+
 		void deleteMe()
 		{
 			delete [] this;
@@ -123,23 +138,24 @@ class Ninja
 			enemiesSlain = 0;
 		}
 
-		void Slash(Map map, Enemy *enemies[])
+		void Slash(Map map, Enemy *enemies[], int numberOfEnemies)
 		{
 			DrawNinjaSlash(map);
-			for(int i = 0; i < 10; i++)
+			for(int i = 0; i < numberOfEnemies; i++)
 			{
 				if(x+21 >= enemies[i]->x && x+9 <= enemies[i]->x && y+3 == enemies[i]->y)
 				{
 					enemies[i]->x = 77;
 					enemies[i]->character = "#";
+					enemies[i]->slain = true;
 					enemiesSlain++;
 				}
 			}
-			map.Render(25);
+			map.Render(1);
 			HideNinjaSlash(map);
-			map.Render(25);
+			map.Render(1);
 			DrawNinja(map);
-			map.Render(25);
+			map.Render(1);
 		}
 
 		void DrawNinja(Map map)
@@ -182,14 +198,14 @@ class Ninja
 			map.map[y+3].replace(x+9, 13, "             ");
 		}
 
-	void GetUserInput(Map map, Enemy *enemies[])
+	void GetUserInput(Map map, Enemy *enemies[], int numberOfEnemies)
 	{
 		if (_kbhit())
 		{
 			switch(_getch())
 			{
 				case ' ':
-					Slash(map, enemies);
+					Slash(map, enemies, numberOfEnemies);
 					break;
 				case 'w':
 					if(y > 1)
@@ -243,15 +259,15 @@ class Ninja
 int tick = 0;
 Map map;
 Ninja ninja;
-Enemy *enemies[10];
-int numberOfEnemies = 10;
+Enemy *enemies[100];
+int numberOfEnemies = 100;
 
 int main()
 {
 	srand(time(NULL));
 	for(int i = 0; i < numberOfEnemies; i++)
 	{
-		enemies[i] = new Enemy();
+		enemies[i] = new Enemy(map);
 	}
 
 	Intro();
@@ -259,7 +275,7 @@ int main()
 	while(true)
 	{
 
-		ninja.GetUserInput(map, enemies);
+		ninja.GetUserInput(map, enemies, numberOfEnemies);
 		ninja.DrawNinja(map);
 
 		for(int i = 0; i < numberOfEnemies; i++)
@@ -267,35 +283,25 @@ int main()
 			enemies[i] -> MoveEnemy(map);
 		}
 
-		map.Render(25);
+		map.Render(1);
 		
-		bool checkIfEnd[numberOfEnemies];
+		bool allTrue = false;
 		for(int i = 0; i < numberOfEnemies; i++)
 		{
-			if(enemies[i]-> x == 77 || enemies[i]-> x == 1)
+			if(enemies[i]->slain)
 			{
-				checkIfEnd[i] = true;	
-			}
-		}
-
-
-		bool allTrue = true;
-		bool allFalse = true;
-		for(int i = 0; i < numberOfEnemies; i++)
-		{
-			if(checkIfEnd[i])
-			{
-				allFalse = false;
+				allTrue = true;
 			}
 			else
 			{
 				allTrue = false;
+				i = numberOfEnemies;
 			}
 		}
 
 		if(allTrue)
 		{
-			map.Render(25);
+			map.Render(1);
 			cout << "\n\nLevel 1 complete\nEnemies slain: " << ninja.enemiesSlain << "\nScore: " << (ninja.enemiesSlain * 765)-(ninja.enemiesSlain * 16);
 			exit(0);
 		}
